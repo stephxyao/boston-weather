@@ -1,0 +1,30 @@
+---
+title: "Boston Weather Graphic"
+author: "Stephanie Yao"
+date: "April 9, 2019"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(lubridate)
+library(ggridges)
+library(viridis)
+```
+
+```{r create_graphic, echo=FALSE, message=FALSE}
+read_csv("boston_weather.csv", guess_max = 100000) %>%
+  select(DATE, TMAX) %>%
+  mutate(month = month(DATE, label = TRUE, abbr = FALSE)) %>%
+  ggplot(aes(x = TMAX, y = fct_rev(month))) + 
+  geom_density_ridges_gradient(aes(fill = ..x..)) +
+  scale_fill_viridis(name = "Temp [F]", option = "C") +
+  labs(title = "Maximum Daily Temperatures in Boston: 1936 -- 2019",
+       subtitle = "Recorded at Boston Logan Airport",
+       caption = "Source: NOAA") +
+  xlab("Temperature") +
+  ylab(NULL)
+  
+```
